@@ -1,0 +1,276 @@
+import tkinter as tk
+
+root = tk.Tk()
+root.title("Rack It!")
+root.geometry("600x700")
+
+
+#=============================================================SCREEN 1=====================================================================
+screen1 = tk.Frame(root)
+screen1.pack(fill="both", expand=True)
+
+title1 = tk.Label(screen1, text="Choose Weight", font=("Times New Roman", 24))
+title1.pack(pady=30)
+
+def draw_stand(canvas):
+    canvas.create_rectangle(75, 87, 425, 93, fill="black")
+    canvas.create_rectangle(75, 85, 141, 95, fill="black")
+    canvas.create_rectangle(359, 85, 425, 95, fill="black")
+    canvas.create_rectangle(141, 83, 146, 97, fill="black")
+    canvas.create_rectangle(354, 83, 359, 97, fill="black")
+
+def draw_ez(canvas):
+    canvas.create_line(146, 90, 150, 90, 190, 75, 210, 100, 230, 90, 250, 90, 270, 90, 290, 100, 310, 75, 350, 90, 354, 90, smooth=True, width=7, fill="black")
+    canvas.create_rectangle(75, 85, 141, 95, fill="black")
+    canvas.create_rectangle(359, 85, 425, 95, fill="black")
+    canvas.create_rectangle(141, 83, 146, 97, fill="black")
+    canvas.create_rectangle(354, 83, 359, 97, fill="black")
+
+def draw_trap(canvas):
+    canvas.create_line(146, 90, 160, 90, 220, 40, 250, 40, 280, 40, 340, 90, 354, 90, 354, 90, 340, 90, 280, 140, 250, 140, 220, 140, 146, 90, smooth=False, width=7,fill="black")
+    canvas.create_line(210,50,210,130,smooth=False,width=6,fill="black")
+    canvas.create_line(290,50, 290,130, smooth=False, width=6, fill="black")
+    canvas.create_rectangle(75, 85, 141, 95, fill="black")
+    canvas.create_rectangle(359, 85, 425, 95, fill="black")
+    canvas.create_rectangle(141, 83, 146, 97, fill="black")
+    canvas.create_rectangle(354, 83, 359, 97, fill="black")
+
+    
+
+# Bar selection
+bar_choice1 = tk.StringVar(screen1)
+bar_choice1.set("Select Bar")
+
+bar_menu = tk.OptionMenu(
+    screen1,
+    bar_choice1,
+    "Standard Bar",
+    "EZ Curl Bar",
+    "Trap Bar"
+)
+bar_menu.pack()
+
+# Weight input
+weight_label = tk.Label(screen1, text="Enter Weight")
+weight_label.pack(pady=5)
+
+weight = tk.Entry(screen1)
+weight.pack()
+
+
+def configurate(weight, bar):
+
+    x = (weight - bar) / 2
+
+    fortyfives = x // 45
+    x -= fortyfives * 45
+
+    twentyfives = x // 25
+    x -= twentyfives * 25
+
+    tens = x // 10
+    x -= tens * 10
+
+    fives = x // 5
+    x -= fives * 5
+
+    twopointfives = x // 2.5
+    x -= twopointfives * 2.5
+
+    remainder = x
+
+    rack = {
+        "45" : int(fortyfives),
+        "25" : int(twentyfives),
+        "10" : int(tens),
+        "5" : int(fives),
+        "2.5" : int(twopointfives),
+        "remainder" : int(remainder)
+    }
+
+    
+    draw_configured_plates(canvas1, rack)
+    
+    return rack
+
+
+def calculate():
+    canvas1.delete("all")
+
+    # Get selected bar
+    bar = bar_choice1.get()
+
+    if bar == "Standard Bar":
+        bar_weight = 45
+        draw_stand(canvas1)
+    elif bar == "EZ Curl Bar":
+        bar_weight = 15
+        draw_ez(canvas1)
+    else:
+        bar_weight = 55
+        draw_trap(canvas1)
+
+    # Get desired weight
+    desired_weight = int(weight.get())
+
+    rack = configurate(desired_weight, bar_weight)
+    
+
+    result_label.config(
+        text=f"45s: {rack["45"]}\n"
+             f"25s: {rack["25"]}\n"
+             f"10s: {rack["10"]}\n"
+             f"5s: {rack["5"]}\n"
+             f"2.5s: {rack["2.5"]}\n"
+             f"Remainder: {rack["remainder"]}"
+    )
+    draw_configured_plates(canvas1, rack)
+
+canvas1 = tk.Canvas(screen1, width=500, height=180, bg="white")
+canvas1.pack(pady=10)
+
+calc_btn = tk.Button(screen1, text="Rack It!", font=("Times New Roman", 12),command=calculate)
+
+calc_btn.pack(pady=20)
+
+result_label = tk.Label(screen1, text="", font=("Times New Roman", 12))
+result_label.pack()
+
+def go_to_screen2():
+    screen1.pack_forget()
+    screen2.pack(fill="both", expand=True)
+
+go_to_screen2_btn = tk.Button(screen1, text="Switch Screens", font=("Times New Roman", 8),command=go_to_screen2)
+go_to_screen2_btn.pack(side="bottom", pady=10)
+#============================================================SCREEN 2===================================================
+plates_screen2 = {
+    "45": 0,
+    "25": 0,
+    "10": 0,
+    "5": 0,
+    "2.5": 0}
+
+screen2 = tk.Frame(root)
+title2 = tk.Label(screen2, text="Choose Plates", font=("Times New Roman", 24))
+title2.pack(pady=30)
+
+canvas2 = tk.Canvas(screen2, width=500, height=180, bg="white")
+canvas2.pack(pady=10)
+
+# Bar selection
+bar_choice2 = tk.StringVar(screen2)
+bar_choice2.set("Select Bar")
+
+bar_menu = tk.OptionMenu(
+    screen2,
+    bar_choice2,
+    "Standard Bar",
+    "EZ Curl Bar",
+    "Trap Bar"
+)
+bar_menu.pack()
+
+
+
+plate_menu = tk.Frame(screen2)
+plate_menu.pack(pady=10)
+
+plate_options = [
+    ("45","red",40),
+    ("25", "blue", 35),
+    ("10", "yellow", 30),
+    ("5","green", 25),
+    ("2.5","gray", 15)
+    
+]
+
+for name, color, size in plate_options:
+    plate_button_frame = tk.Frame(plate_menu)
+    plate_button_frame.pack(side="left", padx=10)
+
+    plate_labels = tk.Label(plate_button_frame, text=name, font=("Times New Roman", 8), width=10, bg=color, relief = "raised")
+    plate_labels.pack(padx=5, pady=5)
+    
+    add_plate_btns = tk.Button(plate_button_frame, text="+", font=("Times New Roman", 8), bg="lightgray", command=lambda p=name: add_plate(p))
+    add_plate_btns.pack(padx=5, pady=5)
+    
+    remove_plate_btns = tk.Button(plate_button_frame, text="-", font=("Times New Roman", 8), bg="lightgray",command=lambda p=name: remove_plate(p))
+    remove_plate_btns.pack(padx=5)
+
+count_label = tk.Label(screen2, text="", font=("Times New Roman", 14))
+count_label.pack(pady=20)
+    
+def add_plate(plate):
+    canvas2.delete("all")
+    plates_screen2[plate] += 1
+    update_display()
+    draw_configured_plates(canvas2, plates_screen2)
+    
+
+def remove_plate(plate):
+    if plates_screen2[plate] > 0:
+        plates_screen2[plate] -= 1
+    else:
+        return
+    canvas2.delete("all")
+    update_display()
+    draw_configured_plates(canvas2, plates_screen2)
+    
+def update_display():
+    canvas2.delete("all")
+    text = (
+        f"45s: {plates_screen2['45']}\n"
+        f"25s: {plates_screen2['25']}\n"
+        f"10s: {plates_screen2['10']}\n"
+        f"5s: {plates_screen2['5']}\n"
+        f"2.5s: {plates_screen2['2.5']}"
+    )
+
+    count_label.config(text=text, font=("Times New Roman", 14) )
+
+    bar = bar_choice2.get()
+
+    if bar == "Standard Bar":
+        bar_weight = 45
+        draw_stand(canvas2)
+    elif bar == "EZ Curl Bar":
+        bar_weight = 15
+        draw_ez(canvas2)
+    elif bar == "Trap Bar":
+        bar_weight = 55
+        draw_trap(canvas2)
+    else:
+        canvas2.create_text(250, 90, text="Choose Bar First", anchor="s")
+
+
+def draw_plate(canvas, x, color, size):
+    canvas.create_rectangle(
+        x-5, 90-size,
+        x+5, 90+size,
+        fill=color,
+        tags="plates")
+
+def draw_configured_plates(canvas, plates):
+    x = 135
+    for name, color, size in plate_options:
+        count = plates.get(name,0)
+        for _ in range(count):
+            draw_plate(canvas, x, color, size)
+            x-= 12
+    
+    x = 365
+    for name, color, size in plate_options:
+        count = plates.get(name,0)
+        for _ in range(count):
+            draw_plate(canvas, x, color, size)
+            x+= 12
+
+def go_to_screen1():
+    screen2.pack_forget()
+    screen1.pack(fill="both", expand=True)
+    canvas1.delete("all")
+
+go_to_screen1_btn = tk.Button(screen2, text="Switch Back", font=("Times New Roman", 8),command=go_to_screen1)
+go_to_screen1_btn.pack(side="bottom", pady=10)
+#=========================================================Start Up================================================
+root.mainloop()
