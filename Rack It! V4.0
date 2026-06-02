@@ -1,248 +1,78 @@
 import tkinter as tk
 
+
+#Create and Open Pop Up Window
 root = tk.Tk()
 root.title("Rack It!")
 root.geometry("600x700")
 
-
-#=============================================================SCREEN 1=====================================================================
-screen1 = tk.Frame(root)
-screen1.pack(fill="both", expand=True)
-
-title1 = tk.Label(screen1, text="Choose Weight", font=("Times New Roman", 24))
-title1.pack(pady=30)
-
-def draw_stand(canvas):
-    canvas.create_rectangle(75, 87, 425, 93, fill="black")
-    canvas.create_rectangle(75, 85, 141, 95, fill="black")
-    canvas.create_rectangle(359, 85, 425, 95, fill="black")
-    canvas.create_rectangle(141, 83, 146, 97, fill="black")
-    canvas.create_rectangle(354, 83, 359, 97, fill="black")
-
+I_E = 2102500
+# ==================================================================== GRAPHICS ===================================================================
+#Draw "Standard Barbell"
+def draw_men(canvas):
+    #Thin Part
+    canvas.create_rectangle(25, 87, 375, 94, fill="black")
+    #Sleeves
+    canvas.create_rectangle(25, 85, 91, 95, fill="black")
+    canvas.create_rectangle(309, 85, 375, 95, fill="black")
+    #Coupling/Separation
+    canvas.create_rectangle(91, 83, 96, 97, fill="black")
+    canvas.create_rectangle(304, 83, 309, 97, fill="black")
+    
+#Draw "EZ Curl Bar"
 def draw_ez(canvas):
-    canvas.create_line(146, 90, 150, 90, 190, 75, 210, 100, 230, 90, 250, 90, 270, 90, 290, 100, 310, 75, 350, 90, 354, 90, smooth=True, width=7, fill="black")
-    canvas.create_rectangle(75, 85, 141, 95, fill="black")
-    canvas.create_rectangle(359, 85, 425, 95, fill="black")
-    canvas.create_rectangle(141, 83, 146, 97, fill="black")
-    canvas.create_rectangle(354, 83, 359, 97, fill="black")
+    #Wavy Part
+    canvas.create_line(
+        96, 90,
+        100, 90,
+        140, 75,
+        160, 100,
+        180, 90,
+        200, 90,
+        220, 90,
+        240, 100,
+        260, 75,
+        300, 90,
+        304, 90,  
+        smooth=True,
+        width=7,
+        fill="black")
+    #Sleeves
+    canvas.create_rectangle(25, 85, 91, 95, fill="black")
+    canvas.create_rectangle(309, 85, 375, 95, fill="black")
+    #Coupling
+    canvas.create_rectangle(91, 83, 96, 97, fill="black")
+    canvas.create_rectangle(304, 83, 309, 97, fill="black")
 
+#Draw "Trap Bar"
 def draw_trap(canvas):
-    canvas.create_line(146, 90, 160, 90, 220, 40, 250, 40, 280, 40, 340, 90, 354, 90, 354, 90, 340, 90, 280, 140, 250, 140, 220, 140, 146, 90, smooth=False, width=7,fill="black")
-    canvas.create_line(210,50,210,130,smooth=False,width=6,fill="black")
-    canvas.create_line(290,50, 290,130, smooth=False, width=6, fill="black")
-    canvas.create_rectangle(75, 85, 141, 95, fill="black")
-    canvas.create_rectangle(359, 85, 425, 95, fill="black")
-    canvas.create_rectangle(141, 83, 146, 97, fill="black")
-    canvas.create_rectangle(354, 83, 359, 97, fill="black")
+    #Hex Shaft
+    canvas.create_line(
+        96, 90,
+        110, 90,
+        170, 40,
+        200, 40,
+        230, 40,
+        290, 90,
+        304, 90,
+        304, 90,
+        290, 90,
+        230, 140,
+        200, 140,
+        170, 140,
+        110, 90,
+        96, 90,  smooth=False,width=7,fill="black")
+    #Grips
+    canvas.create_line(160,50,160,130,smooth=False,width=6,fill="black")
+    canvas.create_line(240,50, 240,130, smooth=False, width=6, fill="black")
+    #Sleeve
+    canvas.create_rectangle(25, 85, 91, 95, fill="black")
+    canvas.create_rectangle(309, 85, 375, 95, fill="black")
+    #Couplers
+    canvas.create_rectangle(91, 83, 96, 97, fill="black")
+    canvas.create_rectangle(304, 83, 309, 97, fill="black")
 
-    
-
-# Bar selection
-bar_choice1 = tk.StringVar(screen1)
-bar_choice1.set("Select Bar")
-
-bar_menu = tk.OptionMenu(
-    screen1,
-    bar_choice1,
-    "Standard Bar",
-    "EZ Curl Bar",
-    "Trap Bar"
-)
-bar_menu.pack()
-
-# Weight input
-weight_label = tk.Label(screen1, text="Enter Weight")
-weight_label.pack(pady=5)
-
-weight = tk.Entry(screen1)
-weight.pack()
-
-
-def configurate(weight, bar):
-
-    x = (weight - bar) / 2
-
-    fortyfives = x // 45
-    x -= fortyfives * 45
-
-    twentyfives = x // 25
-    x -= twentyfives * 25
-
-    tens = x // 10
-    x -= tens * 10
-
-    fives = x // 5
-    x -= fives * 5
-
-    twopointfives = x // 2.5
-    x -= twopointfives * 2.5
-
-    remainder = x
-
-    rack = {
-        "45" : int(fortyfives),
-        "25" : int(twentyfives),
-        "10" : int(tens),
-        "5" : int(fives),
-        "2.5" : int(twopointfives),
-        "remainder" : int(remainder)
-    }
-
-    
-    draw_configured_plates(canvas1, rack)
-    
-    return rack
-
-
-def calculate():
-    canvas1.delete("all")
-
-    # Get selected bar
-    bar = bar_choice1.get()
-
-    if bar == "Standard Bar":
-        bar_weight = 45
-        draw_stand(canvas1)
-    elif bar == "EZ Curl Bar":
-        bar_weight = 15
-        draw_ez(canvas1)
-    else:
-        bar_weight = 55
-        draw_trap(canvas1)
-
-    # Get desired weight
-    desired_weight = int(weight.get())
-
-    rack = configurate(desired_weight, bar_weight)
-    
-
-    result_label.config(
-        text=f"45s: {rack["45"]}\n"
-             f"25s: {rack["25"]}\n"
-             f"10s: {rack["10"]}\n"
-             f"5s: {rack["5"]}\n"
-             f"2.5s: {rack["2.5"]}\n"
-             f"Remainder: {rack["remainder"]}"
-    )
-    draw_configured_plates(canvas1, rack)
-
-canvas1 = tk.Canvas(screen1, width=500, height=180, bg="white")
-canvas1.pack(pady=10)
-
-calc_btn = tk.Button(screen1, text="Rack It!", font=("Times New Roman", 12),command=calculate)
-
-calc_btn.pack(pady=20)
-
-result_label = tk.Label(screen1, text="", font=("Times New Roman", 12))
-result_label.pack()
-
-def go_to_screen2():
-    screen1.pack_forget()
-    screen2.pack(fill="both", expand=True)
-
-go_to_screen2_btn = tk.Button(screen1, text="Switch Screens", font=("Times New Roman", 8),command=go_to_screen2)
-go_to_screen2_btn.pack(side="bottom", pady=10)
-#============================================================SCREEN 2===================================================
-plates_screen2 = {
-    "45": 0,
-    "25": 0,
-    "10": 0,
-    "5": 0,
-    "2.5": 0}
-
-screen2 = tk.Frame(root)
-title2 = tk.Label(screen2, text="Choose Plates", font=("Times New Roman", 24))
-title2.pack(pady=30)
-
-canvas2 = tk.Canvas(screen2, width=500, height=180, bg="white")
-canvas2.pack(pady=10)
-
-# Bar selection
-bar_choice2 = tk.StringVar(screen2)
-bar_choice2.set("Select Bar")
-
-bar_menu = tk.OptionMenu(
-    screen2,
-    bar_choice2,
-    "Standard Bar",
-    "EZ Curl Bar",
-    "Trap Bar"
-)
-bar_menu.pack()
-
-
-
-plate_menu = tk.Frame(screen2)
-plate_menu.pack(pady=10)
-
-plate_options = [
-    ("45","red",40),
-    ("25", "blue", 35),
-    ("10", "yellow", 30),
-    ("5","green", 25),
-    ("2.5","gray", 15)
-    
-]
-
-for name, color, size in plate_options:
-    plate_button_frame = tk.Frame(plate_menu)
-    plate_button_frame.pack(side="left", padx=10)
-
-    plate_labels = tk.Label(plate_button_frame, text=name, font=("Times New Roman", 8), width=10, bg=color, relief = "raised")
-    plate_labels.pack(padx=5, pady=5)
-    
-    add_plate_btns = tk.Button(plate_button_frame, text="+", font=("Times New Roman", 8), bg="lightgray", command=lambda p=name: add_plate(p))
-    add_plate_btns.pack(padx=5, pady=5)
-    
-    remove_plate_btns = tk.Button(plate_button_frame, text="-", font=("Times New Roman", 8), bg="lightgray",command=lambda p=name: remove_plate(p))
-    remove_plate_btns.pack(padx=5)
-
-count_label = tk.Label(screen2, text="", font=("Times New Roman", 14))
-count_label.pack(pady=20)
-    
-def add_plate(plate):
-    canvas2.delete("all")
-    plates_screen2[plate] += 1
-    update_display()
-    draw_configured_plates(canvas2, plates_screen2)
-    
-
-def remove_plate(plate):
-    if plates_screen2[plate] > 0:
-        plates_screen2[plate] -= 1
-    else:
-        return
-    canvas2.delete("all")
-    update_display()
-    draw_configured_plates(canvas2, plates_screen2)
-    
-def update_display():
-    canvas2.delete("all")
-    text = (
-        f"45s: {plates_screen2['45']}\n"
-        f"25s: {plates_screen2['25']}\n"
-        f"10s: {plates_screen2['10']}\n"
-        f"5s: {plates_screen2['5']}\n"
-        f"2.5s: {plates_screen2['2.5']}"
-    )
-
-    count_label.config(text=text, font=("Times New Roman", 14) )
-
-    bar = bar_choice2.get()
-
-    if bar == "Standard Bar":
-        bar_weight = 45
-        draw_stand(canvas2)
-    elif bar == "EZ Curl Bar":
-        bar_weight = 15
-        draw_ez(canvas2)
-    elif bar == "Trap Bar":
-        bar_weight = 55
-        draw_trap(canvas2)
-    else:
-        canvas2.create_text(250, 90, text="Choose Bar First", anchor="s")
-
-
+#Draw Plates
 def draw_plate(canvas, x, color, size):
     canvas.create_rectangle(
         x-5, 90-size,
@@ -250,27 +80,792 @@ def draw_plate(canvas, x, color, size):
         fill=color,
         tags="plates")
 
+#Draw Plates on Bar
 def draw_configured_plates(canvas, plates):
-    x = 135
-    for name, color, size in plate_options:
-        count = plates.get(name,0)
+    #Left Side
+    x = 85
+    for size in ["45", "25", "10", "5", "2.5"]:
+        count = plates.get(size,0)
         for _ in range(count):
-            draw_plate(canvas, x, color, size)
+            data = PLATE_DATA[size]
+            draw_plate(canvas, x, data["color"], data["height"])
             x-= 12
     
-    x = 365
-    for name, color, size in plate_options:
-        count = plates.get(name,0)
+    #Right Side
+    x = 315
+    for size in ["45", "25", "10", "5", "2.5"]:
+        count = plates.get(size,0)
         for _ in range(count):
-            draw_plate(canvas, x, color, size)
+            data = PLATE_DATA[size]
+            draw_plate(canvas, x, data["color"], data["height"])
             x+= 12
 
-def go_to_screen1():
-    screen2.pack_forget()
-    screen1.pack(fill="both", expand=True)
-    canvas1.delete("all")
+#Make Legend
+def draw_legend(canvas, plates):
+    x, y= 420, 10  
+    for size in ["45", "25", "10", "5", "2.5"]:
+        count = plates.get(size, 0)
+        if count > 0:
+            canvas.create_rectangle(x, y, x+10, y+10, fill=PLATE_DATA[size]["color"], tags="legend")
+            canvas.create_text(x+40, y+5, text=f"{size} lbs", font= ("Times New Roman", 9), tags="legend")
+            y += 18
 
-go_to_screen1_btn = tk.Button(screen2, text="Switch Back", font=("Times New Roman", 8),command=go_to_screen1)
-go_to_screen1_btn.pack(side="bottom", pady=10)
-#=========================================================Start Up================================================
+def draw_supports(canvas, bar_type):
+    config = BAR_DATA.get(bar_type)
+    if not config:
+        return
+    canvas.delete("supports") 
+    offset = 40 if bar_type == "Trap Bar" else 0   
+    for x in config["supports"]:
+        canvas.create_polygon(
+            x, 100 + offset,
+            x-10, 120 + offset,
+            x+10, 120 + offset,
+            fill="black",
+            tags="supports")
+        
+def draw_error(canvas):
+    canvas.delete("all")
+    canvas.create_text(250, 90, text="Nothing to Plot", font=("Times New Roman", 24))
+
+# ==================================================================== FUNCTIONS LIBRARY ======================+======================================
+
+#Miscellaneous Housekeeping
+SHARED_DATA = {
+    "screen1_bar": None,
+    "screen1_plates": {},
+    "screen2_bar": None,
+    "screen2_plates": {},
+    "source": None}
+
+plates_screen1 = {
+    "45": 0,
+    "25": 0,
+    "10": 0,
+    "5": 0,
+    "2.5": 0}
+
+plates_screen2 = {
+    "45": 0,
+    "25": 0,
+    "10": 0,
+    "5": 0,
+    "2.5": 0}
+
+BAR_DATA = {
+    "Standard Barbell": {
+        "weight": 45,
+        "length_in": 86.6,
+        "draw": draw_men,
+        "supports": [135, 265]
+    },
+    "EZ Curl Bar": {
+        "weight": 15,
+        "length_in": 75,
+        "draw": draw_ez,
+        "supports": [145, 255]
+    },
+    "Trap Bar": {
+        "weight": 55,
+        "length_in": 47,
+        "draw": draw_trap,
+        "supports": [160, 240]}}
+PLATE_DATA = {
+    "45": { 
+        "weight" : 45,
+        "color" : "red",
+        "height" : 40
+        },
+     "25": { 
+        "weight" : 25,
+        "color" : "blue",
+        "height" : 35
+        },
+     "10": { 
+        "weight" : 10,
+        "color" : "yellow",
+        "height" : 30
+        },
+     "5": { 
+        "weight" : 5,
+        "color" : "green",
+        "height" : 25
+        },
+     "2.5": { 
+        "weight" : 2.5,
+        "color" : "gray",
+        "height" : 15}}
+
+#Show Screen1
+def show_screen1():
+    screen2.pack_forget()
+    screen3.pack_forget()
+    screen1.pack(fill="both", expand=True)
+    
+    #Reset Screen2 To Empty/Default
+    canvas2.delete("all")
+    
+    bar_choice2.set("Select Bar")
+    listed_weights.config(text="")
+
+#Show Screen2
+def show_screen2():
+    screen1.pack_forget()
+    screen3.pack_forget()
+    screen2.pack(fill="both", expand=True)
+
+    #Reset Screen1 To Empty/Default
+    bar_choice.set("Select Bar")
+    weight.delete(0,tk.END)    
+    canvas1.delete("all")
+    result.config(text="")
+
+#Show Screen3
+def show_screen3():
+    screen1.pack_forget()
+    screen2.pack_forget()
+    screen3.pack(fill="both", expand=True)
+
+    canvases = [canvas3, canvas_Shear, canvas_Moment, canvas_Deflection]
+    for cv in canvases:
+            cv.delete("all")
+
+    source = SHARED_DATA.get("source")
+    bar = SHARED_DATA.get(f"{source}_bar")
+    plates = SHARED_DATA.get(f"{source}_plates")
+    config = BAR_DATA.get(bar)
+
+
+    if not config or not bar:
+        for cv in canvases:
+            draw_error(cv)
+        return
+
+    config["draw"](canvas3)
+    total_weight = config["weight"]
+    for plate, count in plates.items():
+        if count > 0:
+            total_weight += (count * float(plate) * 2)
+    canvas3.create_text(450, 170, text=f"{total_weight:,.0f} lbs", anchor="s")
+        
+    draw_configured_plates(canvas3, plates)
+    draw_legend(canvas3, plates)
+    draw_supports(canvas3, bar)
+    
+    V = draw_shear(canvas_Shear, bar, plates, config["weight"])
+    M = draw_moment(canvas_Moment, V, bar)
+    draw_deflection(canvas_Deflection, M, bar)
+     
+#Going from Screen1 to Screen3
+def go_to_screen3_from_1():
+    SHARED_DATA["screen1_bar"] = bar_choice.get()
+    SHARED_DATA["screen1_plates"] = plates_screen1.copy()
+    SHARED_DATA["source"] = "screen1"
+    show_screen3()
+    
+#Going from Screen2 to Screen3
+def go_to_screen3_from_2():
+    SHARED_DATA["screen2_bar"] = bar_choice2.get()
+    SHARED_DATA["screen2_plates"] = plates_screen2.copy()
+    SHARED_DATA["source"] = "screen2"
+    show_screen3()
+
+def go_back():
+    canvas3.delete("all")
+    canvas_Shear.delete("all")
+    canvas_Moment.delete("all")
+    
+    if SHARED_DATA["source"] == "screen1":
+        show_screen1()
+    elif SHARED_DATA["source"] == "screen2":
+        show_screen2()
+
+    SHARED_DATA["source"] = None
+    SHARED_DATA["screen1_bar"] = None
+    SHARED_DATA["screen1_plates"] = {"45":0,"25":0,"10":0,"5":0,"2.5":0}
+
+    
+
+#Switch Screen Between 1 and 2
+def switch_screen_1or2():
+    if screen1.winfo_ismapped():
+        show_screen2()
+    else:
+        show_screen1()
+
+#============================================================ BENDING/SHEAR/DEFLECTION DIAGRAMS ============================================================
+import numpy as np
+
+
+beam_start = 25
+beam_end = 375
+beam_y = 90
+length = beam_end - beam_start
+
+def get_plate_positions(plates):
+    positions = []
+    weights = {size: data["weight"] for size, data in PLATE_DATA.items()}
+    
+    x_left = 83
+    for size in weights:
+        count = plates.get(size, 0)
+        for _ in range(count):
+            positions.append((x_left, weights[size]))
+            x_left -= 12
+        
+    x_right = 317
+    for size in weights:
+        count = plates.get(size, 0)
+        for _ in range(count):
+            positions.append((x_right, weights[size]))
+            x_right += 12
+        
+    return positions
+
+def draw_shear(canvas, bar_type, plates, bar_weight):
+    canvas.delete("shear")
+
+    config = BAR_DATA.get(bar_type)
+    supports = config["supports"]
+    point_loads = get_plate_positions(plates)
+  
+    w = float(bar_weight/length)
+    
+    total_point_load = sum(p for _, p in point_loads)
+    total_load = total_point_load + bar_weight
+    R = total_load/2
+
+    #Draw Axes
+    canvas.create_line(beam_start, beam_y, beam_end, beam_y, tags="shear")
+    canvas.create_line(beam_start, 180, beam_start, 0, tags="shear")
+
+    #Draw Support Markers
+    for x in supports:
+         canvas.create_line(x, beam_y+5, x, beam_y-5, width=3, tags="shear")
+
+    #Shear Equation
+    xs = np.linspace(beam_start, beam_end, 800)
+    V = np.zeros_like(xs)
+
+    for i, xi in enumerate(xs):
+        V[i] -= w * (xi - beam_start)
+        
+        if xi >= supports[0]:
+            V[i] += R
+        if xi >= supports[1]:
+            V[i] += R
+
+        for px, p in point_loads:
+            if xi >= px:
+                V[i] -= p 
+                
+    if np.abs(V).max() >= 90:
+        scale_factor = 80/np.abs(V).max()
+    else:
+        scale_factor = 1
+       
+    #Plot Shear Visual
+    for i in range(len(xs)-1):
+        canvas.create_line(
+            xs[i], beam_y-(V[i] * scale_factor),
+            xs[i]+1, beam_y-(V[i+1] * scale_factor),
+            fill="orange",
+            width=2,
+            tags="shear")
+        
+    V_peak_values = np.array([V.max(), V.min()])
+    V_peaks = beam_y - (V_peak_values * scale_factor)
+
+    for peak, value in zip(V_peaks, V_peak_values):
+        canvas.create_line(beam_start+5, peak, beam_start-5, peak, width=1, tags="shear") 
+    
+        canvas.create_text(beam_start+10, peak,
+                       text=f"{value:.0f} lbs", anchor="w", font=("Times New Roman", 8), tags="shear")
+    return V
+
+def draw_moment(canvas, V, bar_type):
+    canvas.delete("moment")
+
+    config = BAR_DATA.get(bar_type)
+    supports = config["supports"]
+
+    #Draw Axes
+    canvas.create_line(beam_start, beam_y, beam_end, beam_y, tags="moment")
+    canvas.create_line(beam_start, 180, beam_start, 0, tags="moment")
+
+    #Draw Support Markers
+    for x in supports:
+         canvas.create_line(x, beam_y+5, x, beam_y-5, width=3, tags="moment")
+
+    xs = np.linspace(beam_start, beam_end, 800)
+    M = np.zeros_like(xs)
+
+    for i in range(len(xs)-1):
+        dx = xs[i+1] - xs[i]
+        dx_real = dx * (config["length_in"] / length)
+        dM = (V[i] + V[i+1]) /2 * dx_real
+
+        M[i+1] = M[i] + dM
+    
+    if np.abs(M).max() >= 90:
+        scale_factor = 80/np.abs(M).max()
+    else:
+        scale_factor = 1
+    
+    #Plot Moment Visual
+    for i in range(len(xs)-1):
+        canvas.create_line(
+            xs[i], beam_y - (M[i] * scale_factor),
+            xs[i+1], beam_y - (M[i+1] * scale_factor),
+            fill="blue",
+            width=2,
+            tags="moment")
+
+    M_peak = beam_y - (M.min() * scale_factor)
+    
+    canvas.create_line(
+        beam_start+5, M_peak,
+        beam_start-5, M_peak, width=1, tags="moment") 
+
+    canvas.create_text(beam_start+10, M_peak,
+                       text=f"{M.min():.0f} in-lbs", anchor="w", font=("Times New Roman", 8), tags="moment")
+    return M
+
+def draw_deflection(canvas, M, bar_type):
+    canvas.delete("deflection")
+
+    config = BAR_DATA.get(bar_type)
+    supports = config["supports"]
+
+    #Draw Axes
+    canvas.create_line(beam_start, beam_y, beam_end, beam_y, tags="deflection")
+    canvas.create_line(beam_start, 180, beam_start, 0, tags="deflection")
+
+    #Draw Support Markers
+    for x in supports:
+        canvas.create_line(x, beam_y+5, x, beam_y-5, width=3, tags="deflection")
+
+    xs = np.linspace(beam_start, beam_end, 800)
+    S = np.zeros_like(xs)
+    D = np.zeros_like(xs)
+
+    for i in range(len(xs)-1):
+        dx = xs[i+1] - xs[i]
+        dx_real = dx * (config["length_in"] / length)
+        
+        dS = (M[i] + M[i+1]) /2 * dx_real / I_E
+        S[i+1] = S[i] + dS
+
+    for i in range(len(xs)-1):
+        dx = xs[i+1] - xs[i]
+        dx_real = dx * (config["length_in"] / length)
+        
+        dD = (S[i] + S[i+1]) /2 * dx_real
+        D[i+1] = D[i] + dD
+        
+    #Correction for constants
+    D1_raw = np.interp(supports[0], xs, D)
+    D2_raw = np.interp(supports[1], xs, D)
+    
+    a = (D2_raw - D1_raw) / (supports[1] - supports[0])
+    b = D1_raw - a * supports[0]
+    
+    D = D - (a * xs + b)
+
+    scale_factor = 1 #80/np.abs(D).max()
+    
+    #Plot Deflection Visual
+    for i in range(len(xs)-1):
+        canvas.create_line(
+            xs[i], beam_y - (D[i] * scale_factor),
+            xs[i+1], beam_y - (D[i+1] * scale_factor),
+            fill="purple",
+            width=2,
+            tags="deflection")
+
+    D_peak = beam_y - (D.min() * scale_factor)
+    
+    canvas.create_line(
+        beam_start+5, D_peak,
+        beam_start-5, D_peak, width=1, tags="deflection") 
+
+    canvas.create_text(beam_start+10, D_peak,
+                       text=f"{D.min()*25.4:.2f} mm", anchor="nw", font=("Times New Roman", 8), tags="deflection")
+    return D
+    
+# ===================================================================SCREEN 1 ===================================================================
+screen1 = tk.Frame(root)
+
+title1 = tk.Label(
+    screen1,
+    text="🏋Rack It!",
+    font=("Times New Roman", 24))
+title1.pack(pady=30)
+
+#Add Bar Dropdown
+bar_choice = tk.StringVar(screen1)
+bar_choice.set("Select Bar")
+bar_menu = tk.OptionMenu(screen1, bar_choice,
+    "Standard Barbell",                    
+    "EZ Curl Bar",
+    "Trap Bar")
+bar_menu.pack()
+
+#Add Weight Input
+weight_label = tk.Label(screen1, text="Enter Weight").pack()
+weight = tk.Entry(screen1)
+weight.pack()
+
+#Graphics Screen1
+canvas1 = tk.Canvas(screen1, width=500, height=180, bg="white")
+canvas1.pack(pady=10)
+
+#Output Text
+result = tk.Label(screen1, text="")
+result.pack()
+
+#===================Configurate!===============
+def main_func(): 
+    #Delete Existing Graphic
+    canvas1.delete("all")
+    
+    #Main Function
+    selected_bar = bar_choice.get()
+    config = BAR_DATA.get(selected_bar)
+
+    if not config:
+        return
+
+    config["draw"](canvas1)
+
+    #Plate Math!   
+    x = int(weight.get())
+    bar_weight = config["weight"]
+
+    if x < bar_weight:
+        canvas1.delete("all")
+        result.config(text="Too little weight for this bar")
+        return
+    if x == bar_weight:
+        result.config(text="Just the Bar")
+
+        plates = {
+        "45": 0,
+        "25": 0,
+        "10": 0,
+        "5": 0,
+        "2.5": 0}
+        plates_screen1.update(plates)
+        
+        #Saves New Data to "SHARED_DATA" Library
+        SHARED_DATA["screen1_bar"] = selected_bar
+        SHARED_DATA["screen1_plates"] = plates.copy()
+        SHARED_DATA["source"] = "screen1"
+        return
+    else:  
+        W = x - bar_weight
+        one_side = W / 2 
+            
+        plates = {}
+        plate_sizes = [45, 25, 10, 5, 2.5]
+    
+        output_text = ""
+        
+        for size in plate_sizes:
+            qty = int(one_side / size)
+            plates[str(size)] = qty
+            plates_screen1[str(size)] = qty
+            one_side %= size
+            
+            if plates[str(size)] > 0:
+                output_text += f"{int(plates[str(size)])} {size}lb plate(s) each side\n"
+    
+        result.config(text=output_text)
+        
+        #Draw Configured Plates and Appropiate Legend
+        draw_configured_plates(canvas1, plates)
+        draw_legend(canvas1, plates)
+
+        total_weight = config["weight"]
+        for plate, count in plates.items():
+            if count > 0:
+                total_weight += (count * float(plate) * 2)
+        canvas1.create_text(450, 170, text=f"{total_weight:,.0f} lbs", anchor="s")
+    
+        #Saves New Data to "SHARED_DATA" Library
+        SHARED_DATA["screen1_bar"] = selected_bar
+        SHARED_DATA["screen1_plates"] = plates.copy()
+        SHARED_DATA["source"] = "screen1"
+    
+        
+#Start Button by Enter Key
+weight.bind("<Return>", lambda event: main_func())
+
+#Screen Switching Button
+toggle1 = tk.Button(
+    screen1,
+    text="Switch Screen",
+    command=switch_screen_1or2)
+toggle1.pack(side="bottom", pady=20)
+
+#Switch to Plot Screen Button
+plot_screen_btn = tk.Button(
+    screen1,
+    text="Plot It!",
+    command=go_to_screen3_from_1)
+plot_screen_btn.place(relx=1.0, rely=1.0, x= -20, y= -20, anchor="se")
+
+# ==================================================================== SCREEN 2 ===================================================================
+screen2 = tk.Frame(root)
+title2 = tk.Label(
+    screen2,
+    text="🏋Stack It!",
+    font=("Times New Roman", 24))
+title2.pack(pady=30)
+
+#Graphic Screen
+canvas2 = tk.Canvas(screen2, width=500, height=180, bg="white")
+canvas2.pack(pady=10)
+
+#Add Bar Dropdown
+bar_choice2 = tk.StringVar(screen2)
+bar_choice2.set("Select Bar")
+bar_menu2 = tk.OptionMenu(screen2,bar_choice2,
+    "Standard Barbell",                    
+    "EZ Curl Bar",
+    "Trap Bar")
+bar_menu2.pack()
+
+bar_choice2.trace_add("write", lambda *args: update_screen2_bar())
+
+#Checks to See if Bar Selected
+def bar_selected():
+    return bar_choice2.get() in [
+        "Standard Barbell",
+        "EZ Curl Bar",
+        "Trap Bar"]
+
+#Clear Existing Graphic and Draw New Bar
+def update_screen2_bar():
+    #Clear Graphic
+    canvas2.delete("all")
+
+    #Clear Plate Count
+    for plate in plates_screen2:
+        plates_screen2[plate]=0
+        
+    #Clear Text Output
+    listed_weights.config(text="")
+    total_weight.config(text="")
+
+    selected_bar2 = bar_choice2.get()
+    config = BAR_DATA.get(selected_bar2)
+
+    if not config:
+        return
+
+    config["draw"](canvas2)
+
+#Plate Picking Interface
+plate_menu = tk.Frame(screen2)
+plate_menu.pack(pady=10)
+
+#Initialize Plate Values
+plates_screen2 = {
+    "45": 0,
+    "25": 0,
+    "10": 0,
+    "5": 0,
+    "2.5": 0}
+
+#Create and Format Add Plate Buttons and Remove Plate Buttons
+plate_buttons = [
+    ("45", "red"),
+    ("25", "blue"),
+    ("10", "yellow"),
+    ("5", "green"),
+    ("2.5", "gray")]
+
+for plate, color in plate_buttons:
+
+    plate_frame = tk.Frame(plate_menu)
+    plate_frame.pack(side="left", padx=5)
+    
+    add_btn = tk.Button(
+        plate_frame,
+        text=f"{plate} lb",
+        bg=color,
+        fg="white" if plate != "10" else "black",
+        width=8,
+        command=lambda p=plate: add_plate(p))
+    add_btn.pack(pady=5)
+    
+    remove_btn = tk.Button(
+        plate_frame,
+        text="Remove",
+        bg="lightgray",
+        width=8,
+        command=lambda p=plate: remove_plate(p))
+    remove_btn.pack()
+
+#Count Plates Everytime a Plate Button is Pressed
+def add_plate(plate):
+    if not bar_selected():
+        listed_weights.config(text="Choose Bar First")
+        return
+        
+    plates_screen2[plate] += 1
+    update_selection_display()
+    update_total_weight()
+
+    canvas2.delete("plates")
+    canvas2.delete("legend")
+    
+    draw_configured_plates(canvas2, plates_screen2)
+    draw_legend(canvas2, plates_screen2)
+
+    #Saves New Data to 'SHARED_DATA' Library
+    SHARED_DATA["screen2_plates"] = plates_screen2.copy()
+    
+    
+
+#Remove Plates when Remove Button is Pressed
+def remove_plate(plate):
+    if plates_screen2[plate] > 0:
+        plates_screen2[plate] -= 1
+        
+    update_selection_display()
+    update_total_weight()
+
+    canvas2.delete("plates")
+    canvas2.delete("legend")
+    
+    draw_configured_plates(canvas2, plates_screen2)
+    draw_legend(canvas2, plates_screen2)
+
+    #Saves New Data to 'SHARED_DATA" Library
+    SHARED_DATA["screen2_plates"] = plates_screen2.copy()
+    
+
+    
+#Updates the Weight List at Bottom    
+listed_weights = tk.Label(screen2, text="")
+listed_weights.pack()
+def update_selection_display():
+    text = ""
+    for plate, count in plates_screen2.items():
+        if count > 0:
+            text += f"{count} x {plate} lb\n"
+    listed_weights.config(text=text)
+    
+#Outputs the Total Weight at the Bottom
+total_weight = tk.Label(screen2,text="")
+total_weight.pack()
+def update_total_weight():
+    bar = bar_choice2.get()
+    config = BAR_DATA.get(bar)
+
+    bar_weight = config["weight"] if config else 0
+    
+    total = 0
+    for plate, count in plates_screen2.items():
+        if count > 0:
+           total += (float(plate) * count * 2) 
+    total += bar_weight
+    total_weight.config(text=f"{int(total)} lbs")
+        
+
+#Adds Toggle to Screen 1 Button
+toggle2 = tk.Button(
+    screen2,
+    text="Switch Back",
+    command=switch_screen_1or2
+)
+toggle2.pack(side="bottom", pady=20)
+
+#Switch to Plot Screen Button
+plot_screen_btn2 = tk.Button(
+    screen2,
+    text="Plot It!",
+    command=go_to_screen3_from_2
+)
+plot_screen_btn2.place(relx=1.0, rely=1.0, x= -20, y= -20, anchor="se")
+
+#====================================================================== SCREEN 3 ================================================================
+screen3 = tk.Frame(root)
+
+content_frame = tk.Frame(screen3)
+content_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+#Scroll Feature
+scroll_canvas = tk.Canvas(content_frame, width=540, height=650)
+scroll_canvas.pack(side="left", fill="y")
+
+scrollbar = tk.Scrollbar(content_frame,orient="vertical",command=scroll_canvas.yview)
+scrollbar.pack(side="right", fill="y")
+scroll_canvas.configure(yscrollcommand=scrollbar.set)
+
+scrollable_frame = tk.Frame(scroll_canvas)
+scroll_canvas.create_window((0, 0), window=scrollable_frame, anchor="n")
+scrollable_frame.bind(
+    "<Configure>",
+    lambda e: scroll_canvas.configure(
+        scrollregion=scroll_canvas.bbox("all")))
+scroll_canvas.bind_all(
+    "<MouseWheel>",
+    lambda e: scroll_canvas.yview_scroll(
+        int(-1 * (e.delta / 120)),
+        "units"))
+
+
+title3 = tk.Label(
+    scrollable_frame,
+    text="📈 Plot It!",
+    font=("Times New Roman", 24))
+title3.pack(pady=10)
+
+canvas3 = tk.Canvas(scrollable_frame, width=500, height=180, bg="white")
+canvas3.pack(pady=10)
+
+shear_label = tk.Label(
+    scrollable_frame,
+    text="Shear Force Plot",
+    font=("Times New Roman", 16))
+shear_label.pack(pady=10)
+
+canvas_Shear = tk.Canvas(scrollable_frame, width=500, height=180, bg="white")
+canvas_Shear.pack(pady=10)
+
+moment_label = tk.Label(
+    scrollable_frame,
+    text="Bending Moment Plot",
+    font=("Times New Roman", 16))
+moment_label.pack(pady=10)
+
+canvas_Moment = tk.Canvas(scrollable_frame, width=500, height=180, bg="white")
+canvas_Moment.pack(pady=10)
+
+deflection_label = tk.Label(
+    scrollable_frame,
+    text="Deflection Plot",
+    font=("Times New Roman", 16))
+deflection_label.pack(pady=10)
+
+canvas_Deflection = tk.Canvas(scrollable_frame, width=500, height=180, bg="white")
+canvas_Deflection.pack(pady=10)
+
+
+
+go_back_btn = tk.Button(
+    scrollable_frame,
+    text="Go Back!",
+    command=go_back
+)
+go_back_btn.pack(pady=20)
+
+#================================================================================================================================================
+#Start on screen 1
+show_screen1()
+
+#Keep Window Open
 root.mainloop()
